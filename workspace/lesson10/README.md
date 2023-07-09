@@ -163,7 +163,7 @@ $ docker manifest inspect golang:alpine
 
 ​	可以看出 `manifest` 列表中包含了不同系统架构所对应的镜像 `digest` 值，这样 Docker 就可以在不同的架构中使用相同的 `manifest` (例如 `golang:alpine`) 获取对应的镜像。
 
-​	manifest是一个文件，这个文件包含了有关于镜像信息，如层、大小和摘要。`docker manifest`命令还向用户提供附加信息，比如构建镜像的操作系统和体系结构。而manifest list是一个镜像清单列表，用于存放多个不同os/arch的镜像信息。我们可以创建一个manifest list来指向两个镜像(一个linux 64位和一个指向arm64位的镜像)，然后对用户提供一个唯一的镜像名称。**需要注意的是，manifest文件仅仅是针对于已经在仓库中的镜像！！！ 换句话说，就是这个镜像是刚从仓库中pull下来的！如果这个镜像是自己build的，需要先push到仓库中，否则，这个镜像是没有manifest文件的！！同样的，如果你pull了一个镜像，tag了一下，再去看这个manifest文件，也是没有的，因为tag后的镜像不在镜像仓库中。**原理如图：
+​	manifest是一个文件，这个文件包含了有关于镜像信息，如层、大小和摘要。`docker manifest`命令还向用户提供附加信息，比如构建镜像的操作系统和体系结构。而manifest list是一个镜像清单列表，用于存放多个不同os/arch的镜像信息。我们可以创建一个manifest list来指向两个镜像(一个linux 64位和一个指向arm64位的镜像)，然后对用户提供一个唯一的镜像名称。**需要注意的是，manifest文件仅仅是针对于已经在仓库中的镜像！！！ 换句话说，就是这个镜像是刚从仓库中pull下来的！如果这个镜像是自己build的，需要先push到仓库中，否则，这个镜像是没有manifest文件的！！同样的，如果你pull了一个镜像，tag了一下，再去看这个manifest文件，也是没有的，因为tag后的镜像不在镜像仓库中**。原理如图：
 ![](../img/manifest.png)
 
 
