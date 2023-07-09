@@ -163,7 +163,46 @@ $ docker manifest inspect golang:alpine
 
 ​	可以看出 `manifest` 列表中包含了不同系统架构所对应的镜像 `digest` 值，这样 Docker 就可以在不同的架构中使用相同的 `manifest` (例如 `golang:alpine`) 获取对应的镜像。
 
-下面介绍如何使用 `$ docker manifest` 命令创建并推送 `manifest` 列表到 Docker Hub。
+​	manifest是一个文件，这个文件包含了有关于镜像信息，如层、大小和摘要。`docker manifest`命令还向用户提供附加信息，比如构建镜像的操作系统和体系结构。而manifest list是一个镜像清单列表，用于存放多个不同os/arch的镜像信息。我们可以创建一个manifest list来指向两个镜像(一个linux 64位和一个指向arm64位的镜像)，然后对用户提供一个唯一的镜像名称。**需要注意的是，manifest文件仅仅是针对于已经在仓库中的镜像！！！ 换句话说，就是这个镜像是刚从仓库中pull下来的！如果这个镜像是自己build的，需要先push到仓库中，否则，这个镜像是没有manifest文件的！！同样的，如果你pull了一个镜像，tag了一下，再去看这个manifest文件，也是没有的，因为tag后的镜像不在镜像仓库中。**原理如图：
+![](../img/manifest.png)
+
+
+
+## 使用环境
+
+### docker 服务端支持
+
+​	docker manifest是一个实验特性，当前在docker 20.10及其之后版本是默认支持的，在之前版本需要开启此特性，开启方法如下：
+
+1. 修改/etc/docker/daemon.json 文件，如果没有，新建并添加；如果有，追加后即可，记得检查逗号。
+
+   ```shell
+   vim /etc/docker/daemon.json
+   {
+     "experimental": true
+   }
+   ```
+
+2. 开启experimental，有两种方法：
+
+   - 临时法。设置环境变量即可，但是下次进入界面时，也需要设置（不过可以通过修改/etc/profile，使其成为永久变量）
+     `export DOCKER_CLI_EXPERIMENTAL=enabled`
+
+   - 永久法。修改 ~/.docker/config.json 文件，如下，有则追加，无则新建。
+
+     ```shell
+     vim ~/.docker/config.json
+     {
+         "experimental": "enabled"
+     }
+     ```
+
+3. 完成上述步骤后，`systemctl restart docker` 即可。
+
+### docker registry 支持
+
+​	从docker registry v2.3开始，Docker hub就可以pull multi architecture Docker镜像了
+
 
 
 
@@ -173,7 +212,7 @@ $ docker manifest inspect golang:alpine
 
 
 
-## 创建 `manifest` 列表
+### 创建 `manifest` 列表
 
 ```shell
 # $ docker manifest create MANIFEST_LIST MANIFEST [MANIFEST...]
@@ -187,7 +226,7 @@ $ docker manifest create username/test \
 
 
 
-## 设置 `manifest` 列表
+### 设置 `manifest` 列表
 
 ```shell
 # $ docker manifest annotate [OPTIONS] MANIFEST_LIST MANIFEST
@@ -207,7 +246,7 @@ $ docker manifest annotate username/test \
 
 
 
-## 查看 `manifest` 列表
+### 查看 `manifest` 列表
 
 ```shell
 $ docker manifest inspect username/test
@@ -215,7 +254,7 @@ $ docker manifest inspect username/test
 
 
 
-## 推送 `manifest` 列表
+### 推送 `manifest` 列表
 
 ​	最后我们可以将其推送到 Docker Hub。
 
@@ -225,7 +264,7 @@ $ docker manifest push username/test
 
 
 
-## 测试
+### 测试
 
 ​	我们在 `Linux x86_64` `Linux arm64v8` 中分别执行 `$ docker run -it --rm username/test` 命令，发现可以正确的执行。
 
