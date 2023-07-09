@@ -14,6 +14,23 @@
 
 ​	**重点：在每次启动docker服务时，内核转发参数会被设为1，然而当虚拟机被挂起后再开机，该值会自动变为0，然而docker仍在运行中，但是容器已经上不了网了。**
 
-​	`sysctl net.ipv4.ip_forward=1`  将内核转发参数设为1
 
-​	**`netstat -lntup` 查看端口监听状况**
+
+`sysctl net.ipv4.ip_forward=1`  将内核转发参数设为1，主要是目的是当Linux主机有多个网卡时一个网卡收到的信息是否能够传递给其他的网卡。如果设置成1的话，可以进行数据包转发，可以实现VxLAN 等功能。
+
+上述命令可能只是对当前系统生效，如需永久生效可以使用以下命令：
+
+```shell
+#可以在/etc/sysctl.conf这个文件里面增加以下内容
+net.ipv4.ip_forward = 1  
+
+#然后使用sysctl -p 的命令将参数生效
+sysctl -p /etc/sysctl.conf
+
+#然后重新启动网络即可
+systemctl restart network
+```
+
+​	
+
+**`netstat -lntup` 查看端口监听状况**
