@@ -206,9 +206,16 @@ ff02::2 ip6-allrouters
 
 ​	因为docker0，默认情况下不能通过容器名进行访问。需要通过--link进行设置连接。这样的操作比较麻烦，更推荐的方式是自定义网络，容器都使用该自定义网络，就可以实现通过容器名来互相访问了。
 
+​	Docker容器每次重启后容器IP是会发生变化的。这也意味着如果容器间使用IP地址来进行通信的话，一旦有容器重启，重启的容器将不再能被访问到。而Docker网络就能够解决这个问题。Docker 网络主要有以下两个作用：
+
+- 容器间的互联和通信以及端口映射
+- 容器IP变动时候可以通过服务名直接网络通信而不受到影响
+
+​	因此只要是处于同一个Docker 网络下的容器就可以使用服务名进行直接访问，而无需担心重启。这也是Docker 网络最基本和常用的应用场景。
+
 ## network相关命令
 
-```
+```shell
 docker network connect [OPTIONS] NETWORK CONTAINER:将一个容器连接至一个网络
 
 docker network create [OPTIONS] NETWORK:创建一个网络
