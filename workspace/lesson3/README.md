@@ -32,7 +32,7 @@
 
    `docker image save xxx -o docker_xxx.tar.gz`      文件名可以随便取     -o参数表示输出为  可以直接`docker save`
 
-   还有一个export的版本，不过save版本会保存镜像的版本，而export不会。
+   还有一个export的版本，不过save版本会保存镜像的每个layer，而export会将每个layer合并成一个。
 
 5. 删除镜像
 
@@ -46,7 +46,7 @@
 
    `docker image  load -i docker_xxx.tar.gz`    可以直接 `docker load`
 
-   还有一个import的版本    最好使用load版本。
+   还有一个import的版本，同export一样会合并，因此最好使用load版本。
 
 7. 构建镜像
 
