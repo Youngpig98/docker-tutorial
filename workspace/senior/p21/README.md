@@ -164,4 +164,6 @@ memset(p, 0x00, 20 * MB)
 
 ## 思考题
 
-​	在容器里启动一个写磁盘文件的程序，写入 100MB 的数据，查看写入前和写入后，容器对应的 Memory Cgroup 里 memory.usage_in_bytes 的值以及 memory.stat 里的 rss/cache 值。
+1. 在容器里启动一个写磁盘文件的程序，写入 100MB 的数据，查看写入前和写入后，容器对应的 Memory Cgroup 里 memory.usage_in_bytes 的值以及 memory.stat 里的 rss/cache 值。
+
+​	答：在写入100M数据前，memory.stat中的cache为0，rss有数值；在写入100M数据后，memory.stat中的cache变为103186432，此时memory.usage_in_bytes与memory.limit_in_bytes的数值很接近，可见在写入数据时Linux用到了Page Cache。
