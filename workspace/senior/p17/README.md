@@ -124,7 +124,7 @@ echo 350000 >/sys/fs/cgroup/cpu/group2/group4/cpu.cfs_quota_us  #限制CPU为3.5
 echo 3072 > /sys/fs/cgroup/cpu/group2/group4/cpu.shares # shares 比例 group4: group3 = 3:1
 ```
 
-​	好了，现在我们的节点上总共有 4 个 CPU，而 group3 的程序需要消耗 2 个 CPU，group4 里的程序要消耗 4 个 CPU。
+​	好了，现在我们的节点上总共有 4 个 CPU，而 group3 的程序需要消耗 1.5 个 CPU，group4 里的程序要消耗 3.5 个 CPU。
 
 ​	即使 cpu.cfs_quota_us 已经限制了进程 CPU 使用的绝对值，group3 的限制是 1.5CPU，group4 是 3.5CPU，1.5+3.5=5，这个结果还是超过了节点上的 4 个 CPU。好了，说到这里，我们发现在这种情况下，cpu.shares 终于开始起作用了。
 
